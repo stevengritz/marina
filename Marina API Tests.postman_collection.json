@@ -1,0 +1,264 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Marina API Tests",
+		"_postman_id": "2e462815-8bb7-92fe-1303-6ec3311bb082",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test basic boat post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"postman.setGlobalVariable(\"boat_key\", jsonData.boat_id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/boat",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"boatname\" : \"newest boat\",\r\n\t\"type\" : \"yacht\",\r\n\t\"length\": 123.456 \r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Test basic boat post on live server",
+			"request": {
+				"url": "https://marina-166301.appspot.com/boat",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"boatname\" : \"bigger boat\",\r\n\t\"type\" : \"big\",\r\n\t\"length\": 1230.456 \r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Test basic slip post",
+			"request": {
+				"url": "http://localhost:8080/slip",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"number\" : 5,\r\n\t\"arrival_date\": \"1/1/2017\"\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Online Slip",
+			"request": {
+				"url": "https://marina-166301.appspot.com/slip",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"number\" : 5,\r\n\t\"arrival_date\": \"1/1/2017\"\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Test basic boat put",
+			"request": {
+				"url": "http://localhost:8080/boat/aghkZXZ-Tm9uZXIRCxIEQm9hdBiAgICAgICwCgw",
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"boatname\" : \"some boat\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add boat to slip ",
+			"request": {
+				"url": "http://localhost:8080/slip/\naghkZXZ-Tm9uZXIRCxIEU2xpcBiAgICAgIDQCQw",
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"current_boat\" : \"other boat\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get a list of all boats in DB",
+			"request": {
+				"url": "http://localhost:8080/boat",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get all slips",
+			"request": {
+				"url": "http://localhost:8080/slip",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete boat",
+			"request": {
+				"url": "http://localhost:8080/boat/\naghkZXZ-Tm9uZXIRCxIEQm9hdBiAgICAgICwCQw",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Creat slip and save id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"postman.setGlobalVariable(\"latest_key\", jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/slip",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"number\" : 1\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a slip to dock a ship",
+			"request": {
+				"url": "http://localhost:8080/slip/{{latest_key}}",
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"number\" : 1,\n\t\"current_boat\" : \"newest_boat\",\n\t\"arrival_date\" : \"4/31/17\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update slip with existing boat. Should throw exception",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 403\"] = responseCode.code === 403;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:8080/slip/{{latest_key}}",
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"number\" : 1,\n\t\"current_boat\" : \"newest boat\",\n\t\"arrival_date\" : \"4/31/17\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
