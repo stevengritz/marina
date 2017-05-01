@@ -14,7 +14,7 @@ class Slip(ndb.Model):
 	id = ndb.StringProperty(indexed = True)
 	number = ndb.IntegerProperty()
 	current_boat = ndb.StringProperty(default="")
-	arrival_date = ndb.FloatProperty()
+	arrival_date = ndb.StringProperty()
 
 class BoatHandler(webapp2.RequestHandler):
 	def post(self):
@@ -38,22 +38,26 @@ class BoatHandler(webapp2.RequestHandler):
 			self.response.write(json.dumps(b_d))
 		#else:
 			
-			
-
-		
-		
+				
 class SlipHandler(webapp2.RequestHandler):
 	def post(self):
 		boat_data = json.loads(self.request.body)
-		new_boat = Boat()
-		new_boat.boatname = boat_data['boatname']
-		new_boat.type = boat_data['type']
-		new_boat.length = boat_data['length']
-		new_boat.at_sea = boat_data['at_sea']
-		new_boat.put()
-		boat_dict = new_boat.to_dict()
-		boat_dict['self'] = '/boat/' + new_boat.key.urlsafe()
-		self.response.write(json.dumps(boat_dict))
+		new_slip = Slip()
+		new_slip.number = boat_data['number']
+		new_slip.current_boat = boat_data['current_boat']
+		new_slip.arrival_date = boat_data['arrival_date']
+
+		new_slip.put()
+		slip_dict = new_slip.to_dict()
+		slip_dict['self'] = '/slip/' + new_slip.key.urlsafe()
+		self.response.write(json.dumps(slip_dict))
+		
+	def get(self, id=None):
+		if id:
+			b = ndb.Key(urlsafe=id).get()
+			b_d = b.to_dict()
+			b_d['self'] = "/boat/" + id
+			self.response.write(json.dumps(b_d))
 
 class MainPage(webapp2.RequestHandler):
 	def get(self):
@@ -68,5 +72,6 @@ app = webapp2.WSGIApplication([
 	('/boat', BoatHandler),
 	('/boat/(.*)', BoatHandler),
 	('/slip', SlipHandler),
+	('/slip/(.*)', SlipHandler),
 ], debug=True)
 # [END app]
