@@ -8,7 +8,7 @@ class Boat(ndb.Model) :
 	boatname = ndb.StringProperty()
 	type = ndb.StringProperty()
 	length = ndb.FloatProperty()
-	at_sea = ndb.BooleanProperty()
+	at_sea = ndb.BooleanProperty(default = True)
 
 class Slip(ndb.Model):
 	id = ndb.StringProperty(indexed = True)
@@ -23,11 +23,12 @@ class BoatHandler(webapp2.RequestHandler):
 		new_boat.boatname = boat_data['boatname']
 		new_boat.type = boat_data['type']
 		new_boat.length = boat_data['length']
-		new_boat.at_sea = True
-		boat_key = new_boat.put()
+		new_boat.put()
 		boat_dict = new_boat.to_dict()
 		latest_key = dict()
 		latest_key['boat_id'] = new_boat.key.urlsafe()
+		new_boat.id = new_boat.key.urlsafe()
+		new_boat.put()
 		self.response.write(json.dumps(latest_key))
 		
 	def get(self, id=None):
@@ -64,8 +65,8 @@ allowed_methods = webapp2.WSGIApplication.allowed_methods
 new_allowed_methods = allowed_methods.union(('PATCH',))
 webapp2.WSGIApplication.allowed_methods = new_allowed_methods
 app = webapp2.WSGIApplication([
-    ('/', MainPage),
-    ('/boat', BoatHandler),
+	('/', MainPage),
+	('/boat', BoatHandler),
 	('/boat/(.*)', BoatHandler),
 	('/slip', SlipHandler),
 ], debug=True)
