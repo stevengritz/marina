@@ -28,7 +28,6 @@ class BoatHandler(webapp2.RequestHandler):
 		latest_key = dict()
 		latest_key['boat_id'] = new_boat.key.urlsafe()
 		new_boat.id = new_boat.key.urlsafe()
-		new_boat.put()
 		self.response.write(json.dumps(latest_key))
 		
 	def get(self, id=None):
